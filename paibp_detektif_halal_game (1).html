@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detektif Halal: Misi Khusus Halal & Haram</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts: Poppins & Fredoka -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for winning celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .game-title {
+            font-family: 'Fredoka', cursive;
+        }
+        .badge-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.8); }
+        }
+        /* Custom scrollbar for mobile frame */
+        .phone-screen::-webkit-scrollbar {
+            width: 5px;
+        }
+        .phone-screen::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .phone-screen::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950 flex flex-col items-center justify-between p-2 md:p-6 selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- Top Header info outside phone frame -->
+    <header class="w-full max-w-md text-center py-2">
+        <div class="inline-flex items-center space-x-2 bg-slate-900/80 border border-slate-800 px-3 py-1 rounded-full text-xs text-amber-400 font-semibold shadow-md">
+            <span>🔍 Mode Handphone Aktif</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+    </header>
+
+    <!-- Main Container with Smartphone Frame -->
+    <main class="flex-grow flex items-center justify-center w-full py-2">
+        <!-- Phone Outer Bezel -->
+        <div class="w-full max-w-[420px] h-[820px] max-h-[92vh] bg-slate-900 border-[10px] border-slate-800 rounded-[45px] shadow-2xl flex flex-col relative overflow-hidden ring-1 ring-slate-700/50">
+            
+            <!-- Phone Speaker / Camera Notch -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-36 h-5 bg-slate-800 rounded-b-2xl z-50 flex items-center justify-center space-x-2">
+                <div class="w-12 h-1 bg-slate-700 rounded-full"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-950"></div>
+            </div>
+
+            <!-- Phone Inner Screen Area -->
+            <div id="phone-screen" class="phone-screen flex-grow overflow-y-auto pt-8 pb-6 px-5 flex flex-col justify-between bg-slate-950 relative">
+                
+                <!-- Background Watermark Badge -->
+                <div class="absolute right-2 bottom-10 text-slate-900/40 text-8xl select-none pointer-events-none font-extrabold game-title z-0">
+                    HALAL
+                </div>
+
+                <!-- Screen Content Wrapper -->
+                <div class="relative z-10 flex-grow flex flex-col justify-center">
+
+                    <!-- SCREEN 1: WELCOME & CHARACTER SETUP -->
+                    <div id="screen-welcome" class="space-y-5 text-center my-auto">
+                        <div class="inline-block p-4 bg-amber-500/10 border border-amber-500/30 rounded-3xl mb-1 badge-pulse">
+                            <span class="text-5xl">🕵️‍♂️🥩</span>
+                        </div>
+                        <h1 class="game-title text-2xl md:text-3xl text-amber-400 font-bold leading-tight">DETEKTIF HALAL</h1>
+                        <p class="text-xs text-slate-300 leading-relaxed px-2">
+                            Misi Rahasia Menguji Makanan, Minuman, serta Harta Halal & Haram Berdasarkan Materi PAI Kelas 6 SD!
+                        </p>
+
+                        <div class="space-y-2 text-left bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl text-xs text-slate-300 shadow-inner">
+                            <div class="font-semibold text-amber-400 mb-1 flex items-center space-x-1">
+                                <span>📋</span><span>Panduan Misi:</span>
+                            </div>
+                            <ul class="space-y-1 pl-4 list-disc text-slate-400">
+                                <li>Jawab 20 Kasus pilihan ganda.</li>
+                                <li>Punya 3 Nyawa (kesempatan salah).</li>
+                                <li>Analisis alasan hukum halal/haram tiap soal.</li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-2 text-left pt-1">
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Nama Agen Detektif:</label>
+                            <input type="text" id="detective-name" placeholder="Ketik nama kamu di sini..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all font-medium text-sm text-center">
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="playSound('click'); startGame();" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all text-sm game-title tracking-wider cursor-pointer">
+                                MULAI INVESTIGASI 🚀
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 2: GAMEPLAY QUIZ -->
+                    <div id="screen-game" class="hidden space-y-4 my-auto">
+                        <!-- Top HUD inside phone -->
+                        <div class="flex justify-between items-center bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs">
+                            <div class="flex items-center space-x-2">
+                                <span id="case-badge" class="bg-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded-md font-semibold border border-amber-500/30">Kasus 1/20</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span id="lives-display" class="text-rose-400 font-bold text-sm tracking-widest">❤️❤️❤️</span>
+                                <span class="text-slate-600">|</span>
+                                <span class="text-emerald-400 font-bold"><span id="score-display">0</span> Pts</span>
+                            </div>
+                        </div>
+
+                        <!-- Question Box -->
+                        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-2">
+                            <h3 id="question-text" class="text-sm md:text-base font-semibold text-slate-100 leading-snug">
+                                Pertanyaan investigasi...
+                            </h3>
+                        </div>
+
+                        <!-- Options Grid -->
+                        <div id="options-container" class="space-y-2">
+                            <!-- Options generated dynamically -->
+                        </div>
+
+                        <!-- Explanation Box (Hidden initially) -->
+                        <div id="explanation-box" class="hidden bg-slate-900 border border-slate-700 p-3.5 rounded-2xl space-y-2">
+                            <div class="flex items-center space-x-1.5 text-amber-400 font-semibold text-xs">
+                                <span>💡</span>
+                                <span>Catatan Analisis & Dalil:</span>
+                            </div>
+                            <p id="explanation-text" class="text-[11px] md:text-xs text-slate-300 leading-relaxed"></p>
+                            <button onclick="playSound('click'); nextQuestion();" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-3 rounded-xl transition-all text-xs cursor-pointer shadow-md">
+                                Lanjut Kasus Berikutnya ➔
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 3: RESULT SCREEN -->
+                    <div id="screen-result" class="hidden text-center space-y-5 my-auto">
+                        <div class="inline-block p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-3xl">
+                            <span class="text-5xl">🏆</span>
+                        </div>
+                        <h2 class="game-title text-2xl text-emerald-400 font-bold">Misi Selesai, Agen!</h2>
+                        
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 text-left">
+                            <div class="flex justify-between items-center text-xs border-b border-slate-800 pb-2">
+                                <span class="text-slate-400">Nama Detektif:</span>
+                                <span id="result-name" class="text-amber-400 font-bold"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs border-b border-slate-800 pb-2">
+                                <span class="text-slate-400">Skor Akhir:</span>
+                                <span id="final-score" class="text-emerald-400 font-bold text-base">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Pangkat Detektif:</span>
+                                <span id="detective-rank" class="text-amber-400 font-bold">Detektif Junior</span>
+                            </div>
+                            <p id="result-message" class="text-[11px] text-slate-300 pt-1 italic text-center"></p>
+                        </div>
+
+                        <div>
+                            <button onclick="playSound('click'); restartGame();" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-sm game-title tracking-wider cursor-pointer">
+                                ULANGI MISI 🔄
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Phone Home Bar indicator at bottom inside screen -->
+                <div class="mt-4 pt-2 flex justify-center">
+                    <div class="w-28 h-1 bg-slate-800 rounded-full"></div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer with mandatory signature -->
+    <footer class="text-center py-2 text-xs text-slate-400 space-y-1">
+        <p class="font-medium text-amber-400/90 tracking-wide">dibuat oleh uzmila_SDN01Karangasem</p>
+        <p class="text-[10px] text-slate-600">Game Edukasi PAI & Budi Pekerti Kelas 6 SD • Kurikulum Merdeka</p>
+    </footer>
+
+    <!-- Audio & Game Logic Script -->
+    <script>
+        // --- SYNTHESIZED WEB AUDIO API SOUND EFFECTS ---
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+                    gainNode.gain.setValueAtTime(0.15, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'correct') {
+                    // Success fanfare chime
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'incorrect') {
+                    // Low error buzz
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.setValueAtTime(120, now + 0.15);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'win') {
+                    // Winning melody
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                        g.gain.setValueAtTime(0.2, now + idx * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+                        o.start(now + idx * 0.1);
+                        o.stop(now + idx * 0.1 + 0.25);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio play prevented or not supported", e);
+            }
+        }
+
+        // --- 20 SPECIFIC QUESTIONS ON HALAL & HARAM (PAI CLASS 6 SD) ---
+        const questionsData = [
+            {
+                question: "Apa arti kata 'Halal' menurut bahasa (etimologi)?",
+                options: [
+                    "A. Dilarang dan dijauhi",
+                    "B. Boleh atau dibebaskan",
+                    "C. Kotor dan menjijikkan",
+                    "D. Makruh dikerjakan"
+                ],
+                correct: 1,
+                explanation: "Secara bahasa, halal berasal dari kata halla-yahillu yang berarti boleh, dibebaskan, atau tidak terikat."
+            },
+            {
+                question: "Apa kebalikan dari hukum makanan dan minuman yang halal dalam ajaran Islam?",
+                options: [
+                    "A. Mubah",
+                    "B. Sunah",
+                    "C. Haram",
+                    "D. Makruh"
+                ],
+                correct: 2,
+                explanation: "Haram adalah kebalikan dari halal, yaitu segala sesuatu yang dilarang oleh Allah Swt. dan mendatangkan dosa jika dikerjakan."
+            },
+            {
+                question: "Manakah di bawah ini yang merupakan kriteria utama makanan halal untuk dikonsumsi?",
+                options: [
+                    "A. Lezat, mahal, dan buatan luar negeri",
+                    "B. Zatnya suci, diperoleh dengan cara yang halal, dan menyehatkan",
+                    "C. Mengenyangkan tanpa melihat cara membelinya",
+                    "D. Dimasak oleh koki terkenal"
+                ],
+                correct: 1,
+                explanation: "Makanan halal harus memenuhi syarat dzatnya halal (tidak haram), cara memperolehnya halal (bukan hasil curian/suap), serta baik bagi kesehatan tubuh."
+            },
+            {
+                question: "Mengapa daging babi (khamzir) diharamkan secara mutlak dalam ajaran Islam?",
+                options: [
+                    "A. Karena harganya terlalu murah",
+                    "B. Karena mengandung kuman, cacing pita, dan najis yang berbahaya bagi kesehatan",
+                    "C. Karena sulit ditemukan di pasar tradisional",
+                    "D. Karena warnanya tidak menarik"
+                ],
+                correct: 1,
+                explanation: "Allah Swt. mengharamkan babi karena terbukti secara ilmiah mengandung zat kotor, parasit, dan cacing pita yang merusak tubuh."
+            },
+            {
+                question: "Bagaimana hukum mengonsumsi hewan darat yang memiliki taring kuat untuk menerkam mangsa (seperti harimau, singa, dan anjing)?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Makruh",
+                    "D. Mubah"
+                ],
+                correct: 1,
+                explanation: "Berdasarkan hadis shahih, Rasulullah saw. melarang umat Islam memakan setiap binatang buas yang bertaring."
+            },
+            {
+                question: "Apa hukum memakan burung yang memiliki kuku atau cakar yang kuat untuk mencengkram (seperti burung elang dan burung rajawali)?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Makruh",
+                    "D. Sunah muakkad"
+                ],
+                correct: 1,
+                explanation: "Islam mengharamkan burung pemangsa yang mencengkeram dengan kuku tajamnya (seperti elang, burung hantu, alap-alap)."
+            },
+            {
+                question: "Semua jenis ikan dan binatang laut (air) hukumnya adalah...",
+                options: [
+                    "A. Haram dimakan",
+                    "B. Halal dimakan meskipun tidak disembelih",
+                    "C. Halal hanya jika ditangkap nelayan muslim",
+                    "D. Makruh dikonsumsi"
+                ],
+                correct: 1,
+                explanation: "Berdasarkan dalil Al-Qur'an dan hadis, semua hewan yang hidup di air (laut/sungai) hukumnya halal dan bangkainya pun suci dimakan."
+            },
+            {
+                question: "Minuman keras, arak, bir, dan segala zat yang memabukkan (khamar) dihukumkan sebagai zat yang...",
+                options: [
+                    "A. Halal dan menyehatkan",
+                    "B. Haram dan merusak akal pikiran",
+                    "C. Mubah jika diminum sedikit",
+                    "D. Makruh tahrim"
+                ],
+                correct: 1,
+                explanation: "Khamar atau segala minuman yang memabukkan adalah haram karena menghilangkan kesadaran akal dan merusak organ tubuh."
+            },
+            {
+                question: "Bagaimana hukum memakan binatang yang disembelih tanpa menyebut nama Allah (sengaja melafazkan selain nama Allah)?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Makruh",
+                    "D. Mubah"
+                ],
+                correct: 1,
+                explanation: "Hewan yang disembelih dengan menyebut nama selain Allah (atau tidak disebut nama Allah dengan sengaja) hukumnya haram dimakan."
+            },
+            {
+                question: "Manakah contoh cara memperoleh harta atau makanan dengan cara yang HARAM?",
+                options: [
+                    "A. Bekerja sebagai petani padi yang jujur",
+                    "B. Berdagang dengan jujur dan adil",
+                    "C. Melakukan korupsi uang negara dan mencuri barang tetangga",
+                    "D. Menerima gaji dari hasil kerja lembur di kantor"
+                ],
+                correct: 2,
+                explanation: "Korupsi, mencuri, menipu, dan riba adalah cara memperoleh harta yang diharamkan dalam Islam."
+            },
+            {
+                question: "Apa dampak negatif utama bagi seseorang yang terbiasa memakan makanan haram terhadap ibadahnya?",
+                options: [
+                    "A. Doanya menjadi lebih cepat dikabulkan",
+                    "B. Doa dan amal ibadahnya sulit diterima oleh Allah Swt.",
+                    "C. Badannya menjadi sangat kebal penyakit",
+                    "D. Rezekinya akan semakin melimpah"
+                ],
+                correct: 1,
+                explanation: "Rasulullah saw. mengingatkan bahwa daging yang tumbuh dari barang haram akan sulit diterima doanya dan lebih layak disiksa dengan api neraka."
+            },
+            {
+                question: "Apa hukum memakan binatang bangkai (hewan yang mati tanpa disembelih sesuai syariat), KECUALI ikan dan belalang?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Sunah",
+                    "D. Mubah"
+                ],
+                correct: 1,
+                explanation: "Bangkai adalah salah satu makanan yang secara tegas diharamkan dalam Surah Al-Mā'idah ayat 3."
+            },
+            {
+                question: "Bagaimana hukum mengonsumsi darah yang mengalir dari hewan sembelihan?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Makruh",
+                    "D. Mubah"
+                ],
+                correct: 1,
+                explanation: "Darah yang mengalir (dam masfuh) haram dikonsumsi karena mengandung kotoran dan zat sisa metabolisme tubuh hewan."
+            },
+            {
+                question: "Binatang darat halal apa yang jika disembelih lehernya, dagingnya langsung boleh dimakan tanpa harus ragu?",
+                options: [
+                    "A. Kambing, sapi, dan ayam",
+                    "B. Tikus dan ular",
+                    "C. Anjing dan babi",
+                    "D. Katak dan buaya"
+                ],
+                correct: 0,
+                explanation: "Kambing, sapi, unta, ayam, dan bebek adalah contoh hewan ternak darat yang halal dikonsumsi."
+            },
+            {
+                question: "Apa hukum memakan daging katak atau babi hutan (celeng) bagi umat Islam?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Makruh",
+                    "D. Mubah"
+                ],
+                correct: 1,
+                explanation: "Katak diharamkan karena ada larangan membunuhnya, dan babi hutan termasuk jenis hewan bertaring/najis yang diharamkan."
+            },
+            {
+                question: "Jika kita menemukan makanan yang meragukan kehalalannya (antara halal dan haram tercampur), sikap terbaik seorang anak muslim adalah...",
+                options: [
+                    "A. Langsung memakannya sampai kenyang",
+                    "B. Menghindarinya (syubhat) agar tidak terjerumus ke dalam keharaman",
+                    "C. Memaksa teman untuk mencicipinya",
+                    "D. Menyembunyikannya di dalam tas"
+                ],
+                correct: 1,
+                explanation: "Sikap hati-hati (wara') terhadap perkara syubhat (yang meragukan) sangat dianjurkan agar kita terjaga dari barang haram."
+            },
+            {
+                question: "Manakah kalimat basmalah yang wajib dibaca saat hendak menyembelih hewan atau makan makanan halal?",
+                options: [
+                    "A. Alhamdulillāh",
+                    "B. Bismillāhir-rahmānir-rahīm",
+                    "C. Astagfirullāhal-'azīm",
+                    "D. Subhānallāh"
+                ],
+                correct: 1,
+                explanation: "Membaca basmalah (Bismillāhir-rahmānir-rahīm) adalah syarat sah agar hewan sembelihan menjadi halal dimakan."
+            },
+            {
+                question: "Apa hukum memakan hewan yang diperintahkan untuk dibunuh dalam Islam (seperti cicak, tikus, gagak, dan anjing buas)?",
+                options: [
+                    "A. Halal",
+                    "B. Haram",
+                    "C. Mubah",
+                    "D. Sunah"
+                ],
+                correct: 1,
+                explanation: "Hewan-hewan fasik yang diperintahkan untuk dibunuh (fawāsiq) hukumnya haram dikonsumsi."
+            },
+            {
+                question: "Mengapa Allah Swt. mengharamkan segala hal yang buruk (khabā'is) bagi manusia?",
+                options: [
+                    "A. Agar manusia merasa tersiksa",
+                    "B. Karena Allah ingin melindungi kesehatan, akal, jiwa, dan keselamatan manusia",
+                    "C. Supaya makanan di bumi cepat habis",
+                    "D. Agar manusia tidak bisa tumbuh besar"
+                ],
+                correct: 1,
+                explanation: "Semua larangan Allah (termasuk makanan haram) semata-mata bertujuan menjaga kemaslahatan, kesehatan, dan keselamatan hidup manusia."
+            },
+            {
+                question: "Sebagai pelajar kelas 6 SD yang cerdas, bagaimana penerapan sikap selektif terhadap makanan di kantin sekolah?",
+                options: [
+                    "A. Membeli makanan apa saja yang warnanya paling mencolok",
+                    "B. Memeriksa label halal, kebersihan kemasan, dan memastikan bahan makanannya tidak mengandung zat haram",
+                    "C. Memakan makanan yang sudah jatuh di lantai",
+                    "D. Meminta makanan milik teman tanpa izin"
+                ],
+                correct: 1,
+                explanation: "Anak muslim yang teliti selalu mengecek kehalalan, kebersihan, serta keamanan jajanan sebelum dikonsumsi."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let playerName = "";
+
+        const screenWelcome = document.getElementById("screen-welcome");
+        const screenGame = document.getElementById("screen-game");
+        const screenResult = document.getElementById("screen-result");
+        const detectiveNameInput = document.getElementById("detective-name");
+        
+        const caseBadge = document.getElementById("case-badge");
+        const livesDisplay = document.getElementById("lives-display");
+        const scoreDisplaySpan = document.getElementById("score-display");
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const explanationBox = document.getElementById("explanation-box");
+        const explanationText = document.getElementById("explanation-text");
+
+        const resultName = document.getElementById("result-name");
+        const finalScore = document.getElementById("final-score");
+        const detectiveRank = document.getElementById("detective-rank");
+        const resultMessage = document.getElementById("result-message");
+
+        function startGame() {
+            const name = detectiveNameInput.value.trim();
+            if (!name) {
+                alert("Harap masukkan nama Agen Detektif terlebih dahulu!");
+                detectiveNameInput.focus();
+                return;
+            }
+            playerName = name;
+            score = 0;
+            lives = 3;
+            currentQuestionIndex = 0;
+
+            screenWelcome.classList.add("hidden");
+            screenResult.classList.add("hidden");
+            screenGame.classList.remove("hidden");
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            explanationBox.classList.add("hidden");
+            const q = questionsData[currentQuestionIndex];
+
+            caseBadge.innerText = `Kasus ${currentQuestionIndex + 1} / ${questionsData.length}`;
+            scoreDisplaySpan.innerText = score;
+            livesDisplay.innerText = "❤️".repeat(lives);
+            questionText.innerText = q.question;
+
+            optionsContainer.innerHTML = "";
+            q.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.className = "w-full text-left bg-slate-900 hover:bg-slate-800 border border-slate-800 p-3 rounded-xl text-slate-200 font-medium transition-all text-xs md:text-sm flex items-center justify-between group cursor-pointer shadow-sm";
+                btn.innerHTML = `<span>${option}</span> <span class="text-slate-600 group-hover:text-amber-400 font-bold">➔</span>`;
+                btn.onclick = () => selectAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIndex, selectedBtn) {
+            const q = questionsData[currentQuestionIndex];
+            const allBtns = optionsContainer.getElementsByTagName("button");
+
+            // Disable all buttons after choice
+            for (let b of allBtns) {
+                b.disabled = true;
+                b.classList.remove("hover:bg-slate-800");
+                b.style.cursor = "default";
+            }
+
+            if (selectedIndex === q.correct) {
+                playSound('correct');
+                selectedBtn.classList.remove("bg-slate-900", "border-slate-800");
+                selectedBtn.classList.add("bg-emerald-950/80", "border-emerald-500", "text-emerald-300");
+                score += 5;
+                scoreDisplaySpan.innerText = score;
+            } else {
+                playSound('incorrect');
+                selectedBtn.classList.remove("bg-slate-900", "border-slate-800");
+                selectedBtn.classList.add("bg-rose-950/80", "border-rose-500", "text-rose-300");
+                
+                // Highlight correct one
+                allBtns[q.correct].classList.remove("bg-slate-900", "border-slate-800");
+                allBtns[q.correct].classList.add("bg-emerald-950/80", "border-emerald-500", "text-emerald-300");
+                
+                lives--;
+                livesDisplay.innerText = "❤️".repeat(lives) + "🖤".repeat(3 - lives);
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        showResult(true);
+                    }, 1500);
+                    return;
+                }
+            }
+
+            // Show explanation
+            explanationText.innerText = q.explanation;
+            explanationBox.classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questionsData.length) {
+                loadQuestion();
+            } else {
+                playSound('win');
+                showResult(false);
+            }
+        }
+
+        function showResult(isGameOver) {
+            screenGame.classList.add("hidden");
+            screenResult.classList.remove("hidden");
+
+            resultName.innerText = playerName;
+            finalScore.innerText = `${score} / 100`;
+
+            let rank = "";
+            let msg = "";
+
+            if (isGameOver) {
+                rank = "❌ Investigasi Gagal";
+                msg = "Nyawa habis! Jangan patah semangat, Agen. Pelajari lagi materi halal haram dan coba lagi ya!";
+            } else if (score === 100) {
+                rank = "🌟 Detektif Halal Teladan";
+                msg = "Luar biasa! Sempurna! Kamu sangat teliti mengenali makanan & minuman halal dan haram.";
+                triggerConfetti();
+            } else if (score >= 80) {
+                rank = "🔍 Detektif Halal Senior";
+                msg = "Hebat sekali! Pemahamanmu tentang hukum Islam mengenai barang halal dan haram sudah sangat baik.";
+                triggerConfetti();
+            } else if (score >= 60) {
+                rank = "🔎 Detektif Halal Madya";
+                msg = "Kerja bagus, Agen! Terus tingkatkan ketelitian dalam memilah makanan halal sehari-hari.";
+            } else {
+                rank = "🌱 Detektif Pemula";
+                msg = "Ayo semangat belajar lagi buku PAI Kelas 6 tentang bab Halal dan Haram ya!";
+            }
+
+            detectiveRank.innerText = rank;
+            resultMessage.innerText = msg;
+        }
+
+        function restartGame() {
+            detectiveNameInput.value = "";
+            screenResult.classList.add("hidden");
+            screenWelcome.classList.remove("hidden");
+        }
+
+        function triggerConfetti() {
+            try {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.6 }
+                });
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
